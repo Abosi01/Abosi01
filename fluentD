@@ -1,0 +1,82 @@
+
+Skip to end of metadata
+
+    Created by Suraj Menon, last modified on Sep 25, 2018
+
+Go to start of metadata
+
+    Findings
+        High Level
+        Detailed
+    Suggestions
+
+ 
+Findings
+High Level
+
+Top % indexes, based on injection rate were analyzed to get an idea of the data being used in CE. Following were the high level findings:
+
+    4 of the top 5 indexes were using Logmon log's
+    For the indexes that were using Logmon, ~60% of the logs were INFO or TRANSACTION
+
+Detailed
+5.2 TB	usgm_logmon_terrafirma	logmon	~ 76% of logs are INFO logs
+1.7 TB	usgm_logmon_cxo	logmon	~ 56% of logs are INFO logs
+2.8 TB	usgm_logmon_custprofile	logmon	~ 65% of logs are INFO logs
+
+ 
+Suggestions
+1	
+
+    Remove INFO log's using HF.
+    Remove unused fields from Logmon logs
+
+	
+
+    Potential of 50% capacity to be freed (if adopted for all index)
+
+	
+
+    Difficult to get customer buy-in as they may be using INFO logs for debugging
+    Additional N/W hop because of Universal Forwarded
+
+2	
+
+    Remove INFO log's using FluentD/FluentBit
+    Remove unused fields from Logmon logs
+
+	
+
+    Potential of 50% capacity to be freed (if adopted for all index)
+    N/W utilization will decrease
+
+	
+
+    Difficult to get customer buy-in as they may be using INFO logs for debugging
+    Stability of FluentD/FluentBit is an issue
+
+3	
+
+    Move INFO log's to a separate index with lesser retention (3/5 days).
+    Remove unused fields from Logmon logs
+
+	
+
+    Potential of 35% capacity to be freed (if adopted for all index)
+    Better chance to get customer buy-in
+
+	
+
+    Additional N/W hop because of Universal Forwarded
+
+4	
+
+    Ask CE to correct logging (Currently warning errors etc are logged as INFO) & change log level to WARN.
+        Move terms typically used in adhoc query to WARN/ERROR
+        Most of the current dashboards do not rely on INFO logs
+        (TODO : verify for all logs)
+
+	
+
+    No additional capacity or N/W Bandwidth needed for HF
+    Reduction in disk space needed
